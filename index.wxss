@@ -1,0 +1,175 @@
+/**index.wxss**/
+
+page {
+  width: 100%;
+  height: 100%;
+  background-color: #f6f6f6;
+}
+
+.container {
+ display: block;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: linear-gradient(#4990e2, #87c1f1);
+  justify-content: center;
+  align-items: center;
+}
+
+.location {
+  text-align: center;
+  font-size: 22px;
+  color: #fff;
+  padding-top: 20px;
+  font-weight: 500;
+}
+
+.today {
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  padding-top: 10px;
+  font-weight: 200;
+}
+
+.visual {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding-top: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.weatherIcon {
+  display: flex;
+  flex-direction: row;
+  width: 60%;
+  padding-left: 20px;
+}
+
+.weatherIconX {
+  display:flex;
+  flex-direction: row;
+  width: 40%;
+}
+
+.weatherinfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+}
+
+.temperature {
+  width: 100%;
+  text-align: center;
+  font-size: 26px;
+  color: #fff;
+  vertical-align: middle;
+}
+
+.temperatureX {
+  width: 25%;
+  float: left;
+  text-align: center;
+  font-size: 16px;
+  vertical-align: middle;
+  padding-right: 10px;
+}
+
+.description {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+  vertical-align: middle;
+  padding-top: 0px;
+}
+
+.wind{
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  padding-top: 0px;
+  font-weight: 200;
+}
+
+.air {
+  width: 30%;
+  text-align: center;
+  color:#fff;
+  font-size: 18px;
+  margin-top: 5px;
+  align-items: center;
+  background-color: #00EE00;
+  border-radius: 10rpx;
+}
+
+.descriptionX {
+  width: 25%;
+  float: left;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.weatherDate{
+  width: 12%;
+  float: left;
+  font-size: 16px;
+  vertical-align: middle;
+  padding-left: 10px;
+}
+
+.list {
+  width: 100%;
+}
+
+.list_item {
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  background-color: #fff;
+  height: 80px;
+  width: 100%;
+}
+
+.list_item_alter {
+  display: flex; 
+  flex-direction: row; 
+  background-color: #f6f9fe;
+  width: 100%;
+  height: 80px;
+}
+
+.livingIndex {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: linear-gradient( #87c1f1, #4990e2);
+  justify-content: center;
+  align-items: center;
+}
+
+.horizontalLine{
+ background: #E0E3DA;
+ width: 100%;
+ height: 1rpx;
+}
+
+.livingIndexTitle {
+  font-size: 16px;
+  padding: 10px 10px 0px 10px;
+  color: #fff;
+}
+
+.livingIndexText {
+  font-size: 14px;
+  padding: 4px 10px 10px 10px;
+  color: #fff;
+}
+
