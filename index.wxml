@@ -14,7 +14,8 @@
         <view class="temperature">{{currentTemperature}}</view>
         <view class="description">{{description}}</view>
         <view class="wind">{{wind}}</view>
-        <view class='air' style="background:{{airColor}};">{{pm25}} {{airClass}}</view>
+        <!-- <view class='air' style="background:{{airColor}};">{{pm25}} {{airClass}}</view> -->
+        <view class='air' style="background-color:{{airColor}}" bindtap="pmTap">{{pm25}} {{airClass}}</view>
       </view>
     </view>
   </view>
@@ -56,7 +57,7 @@
   <view class="livingIndex">
 
     <view class="livingIndexTitle">
-      <text>穿衣</text>
+      <text>穿衣：</text>
     </view>
     <view class="livingIndexText">
       {{clothesWearing}}
@@ -64,7 +65,7 @@
 
     <view class="horizontalLine"></view>
     <view class="livingIndexTitle">
-      <text>紫外线</text>
+      <text>紫外线：</text>
     </view>
     <view class="livingIndexText">
       {{uvIndex}}
@@ -72,7 +73,7 @@
 
     <view class="horizontalLine"></view>
     <view class="livingIndexTitle">
-      <text>运动</text>
+      <text>运动：</text>
     </view>
     <view class="livingIndexText">
       {{exerciseIndex}}
@@ -80,7 +81,7 @@
 
     <view class="horizontalLine"></view>
     <view class="livingIndexTitle">
-      <text>感冒</text>
+      <text>感冒：</text>
     </view>
     <view class="livingIndexText">
       {{fluIndex}}
@@ -88,7 +89,7 @@
 
     <view class="horizontalLine"></view>
     <view class="livingIndexTitle">
-      <text>洗车</text>
+      <text>洗车：</text>
     </view>
     <view class="livingIndexText">
       {{carWashing}}

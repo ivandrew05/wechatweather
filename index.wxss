@@ -100,13 +100,12 @@ page {
 }
 
 .air {
-  width: 30%;
+  width: auto;
+  padding: 2px 8px 2px 8px;
   text-align: center;
   color:#fff;
-  font-size: 18px;
-  margin-top: 5px;
-  align-items: center;
-  background-color: #00EE00;
+  font-size: 14px;
+  margin-top: 2px;
   border-radius: 10rpx;
 }
 
@@ -151,25 +150,27 @@ page {
   flex-direction: column;
   width: 100%;
   background: linear-gradient( #87c1f1, #4990e2);
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
 }
 
 .horizontalLine{
  background: #E0E3DA;
  width: 100%;
- height: 1rpx;
+ height: 2rpx;
 }
 
 .livingIndexTitle {
   font-size: 16px;
+  /* font-weight: bold; */
   padding: 10px 10px 0px 10px;
   color: #fff;
 }
 
 .livingIndexText {
+  width:auto;
   font-size: 14px;
-  padding: 4px 10px 10px 10px;
+  padding: 5px 10px 8px 10px;
   color: #fff;
 }
 

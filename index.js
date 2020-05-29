@@ -59,7 +59,9 @@ Page({
         currentTemperature: that.reverseTemperature(weatherData.weather_data[0].temperature),
         description: weatherData.weather_data[0].weather,
         wind: weatherData.weather_data[0].wind,
-        pm25: that.getPm25(weatherData.pm25),
+        pm25: weatherData.pm25,
+        airClass: that.getAirClass(weatherData.pm25),
+        airColor: that.getAirColor(weatherData.pm25),
         weatherIconDay: that.getWeatherIconDay(weatherData.weather_data[0].weather),
         weatherIconNight: that.getWeatherIconNight(weatherData.weather_data[0].weather),
         clothesWearing: weatherData.index[0].des,
@@ -130,38 +132,64 @@ Page({
     return todayDate;
   },
 
-  getPm25(pm25){
+  getAirClass(pm25){
     var airClass = "";
-    var airColor = "";
-    
+
     if (pm25 <= 50) {
       airClass = "优";
-      airColor = "#00EE00";
     }
     else if (pm25 > 50 && pm25 <= 100) {
       airClass = "良";
-      airColor = "#EEEE00";
     }
     else if (pm25 > 100 && pm25 <= 150) {
       airClass = "轻度污染";
-      airColor = "#FF8C00";
     }
     else if (pm25 > 150 && pm25 <= 200) {
       airClass = "中度污染";
-      airColor = "#FF3030";
     }
     else if (pm25 > 200 && pm25 <= 300) {
       airClass = "重度污染";
-      airColor = "#E066FF";
     }
     else {
       airClass = "严重污染";
-      airColor = "#8B0000";
     }
+    // airClass="优"
     return airClass;
+  },
+
+  getAirColor(pm25) {
+    var airColor = "";
+
+    if (pm25 <= 50) {
+      airColor = "#009966";
+    }
+    else if (pm25 > 50 && pm25 <= 100) {
+      airColor = "#ffde33";
+    }
+    else if (pm25 > 100 && pm25 <= 150) {
+      airColor = "#ff9933";
+    }
+    else if (pm25 > 150 && pm25 <= 200) {
+      airColor = "#cc0033";
+    }
+    else if (pm25 > 200 && pm25 <= 300) {
+      airColor = "#660099";
+    }
+    else {
+      airColor = "#7e0023";
+    }
+    // airColor ="#7e0023"
     return airColor;
   },
 
+  pmTap(){
+    console.log("成功")
+    wx.showModal({
+      title: '空气质量',
+      content: '空气质量优',
+    })
+  },
+  
   getWeatherIconDay: function(description) {
     var condition = String(description);
     var conditionDay = String(description);
@@ -181,10 +209,10 @@ Page({
         url = "/images/03-yin.svg";
       } 
       else if (conditionDay == "阵雨") {
-        url = "/images/04-zhengyu.svg";
+        url = "/images/04-zhenyu.svg";
       }
       else if (conditionDay == "雷阵雨") {
-        url = "/images/05-leizhengyu.svg";
+        url = "/images/05-leizhenyu.svg";
       }
       else if (conditionDay == "雷阵雨伴有冰雹") {
         url = "/images/06-leizhenyubingbao";
@@ -232,7 +260,7 @@ Page({
         url = "/images/20-dongyu.svg";
       }
       else if (conditionDay == "沙尘暴") {
-        url = "/images/21-shacengbao.svg";
+        url = "/images/21-shachenbao.svg";
       }
       else if (conditionDay == "浮尘") {
         url = "/images/30-fuchen.svg";
@@ -266,10 +294,10 @@ Page({
         url = "/images/03-yin.svg";
       }
       else if (condition == "阵雨") {
-        url = "/images/04-zhengyu.svg";
+        url = "/images/04-zhenyu.svg";
       }
       else if (condition == "雷阵雨") {
-        url = "/images/05-leizhengyu.svg";
+        url = "/images/05-leizhenyu.svg";
       }
       else if (condition == "雷阵雨伴有冰雹") {
         url = "/images/06-leizhenyubingbao";
@@ -317,7 +345,7 @@ Page({
         url = "/images/20-dongyu.svg";
       }
       else if (condition == "沙尘暴") {
-        url = "/images/21-shacengbao.svg";
+        url = "/images/21-shachenbao.svg";
       }
       else if (condition == "浮尘") {
         url = "/images/30-fuchen.svg";
@@ -334,10 +362,7 @@ Page({
       else {
         url = "/images/unknow.svg";
       }
-
-
     }
-
     return url;
   },
 
@@ -360,10 +385,10 @@ Page({
         url = "/images/36-yinnight.svg";
       }
       else if (conditionNight == "阵雨") {
-        url = "/images/37-zhengyunight.svg";
+        url = "/images/37-zhenyunight.svg";
       }
       else if (conditionNight == "雷阵雨") {
-        url = "/images/05-leizhengyu.svg";
+        url = "/images/05-leizhenyu.svg";
       }
       else if (conditionNight == "雷阵雨伴有冰雹") {
         url = "/images/06-leizhenyubingbao";
@@ -411,7 +436,7 @@ Page({
         url = "/images/20-dongyu.svg";
       }
       else if (conditionNight == "沙尘暴") {
-        url = "/images/21-shacengbao.svg";
+        url = "/images/21-shachenbao.svg";
       }
       else if (conditionNight == "浮尘") {
         url = "/images/30-fuchen.svg";
@@ -428,7 +453,6 @@ Page({
       else {
         url = "/images/unknow.svg";
       }
-      
     } 
     
     // not include 转
@@ -445,10 +469,10 @@ Page({
         url = "/images/36-yinnight.svg";
       }
       else if (condition == "阵雨") {
-        url = "/images/37-zhengyunight.svg";
+        url = "/images/37-zhenyunight.svg";
       }
       else if (condition == "雷阵雨") {
-        url = "/images/05-leizhengyu.svg";
+        url = "/images/05-leizhenyu.svg";
       }
       else if (condition == "雷阵雨伴有冰雹") {
         url = "/images/06-leizhenyubingbao";
@@ -496,7 +520,7 @@ Page({
         url = "/images/20-dongyu.svg";
       }
       else if (condition == "沙尘暴") {
-        url = "/images/21-shacengbao.svg";
+        url = "/images/21-shachenbao.svg";
       }
       else if (condition == "浮尘") {
         url = "/images/30-fuchen.svg";
@@ -513,11 +537,9 @@ Page({
       else {
         url = "/images/unknow.svg";
       }
-
     }
 
     return url;
   },
-
 
 })
