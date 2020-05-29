@@ -2,99 +2,107 @@
 
 <view class="container">
 
-  <view class="top">
-    <view class="location">{{location}}</view>
-    <view class="today">今天 {{weatherDate0}}</view>
-    <view class="visual">
-      <view class="weatherIcon">
-        <image src='{{weatherIconDay}}' mode="aspectFit" style='height:{{iconImageHeight}}px;width:{{iconImageHeight}}px;'></image>
-        <image src='{{weatherIconNight}}' mode="aspectFit" style='height:{{iconImageHeight}}px;width:{{iconImageHeight}}px;'></image>
-      </view>
-      <view class="weatherinfo">
-        <view class="temperature">{{currentTemperature}}</view>
-        <view class="description">{{description}}</view>
-        <view class="wind">{{wind}}</view>
-        <!-- <view class='air' style="background:{{airColor}};">{{pm25}} {{airClass}}</view> -->
-        <view class='air' style="background-color:{{airColor}}" bindtap="pmTap">{{pm25}} {{airClass}}</view>
+  <scroll-view scroll-y='true' style='height:1000px' enable-back-to-top='true'>
+
+    <image class='background' src="/images/02.jpg" mode="aspectFill"></image>
+
+    <view class="top">
+      <view class="location">{{location}}</view>
+      <view class="today">今天 {{weatherDate0}}</view>
+      <view class="visual">
+        <view class="weatherIcon">
+          <image src='{{weatherIconDay}}' mode="aspectFit" style='height:{{iconImageHeight}}px;width:{{iconImageHeight}}px;'></image>
+          <image src='{{weatherIconNight}}' mode="aspectFit" style='height:{{iconImageHeight}}px;width:{{iconImageHeight}}px;'></image>
+        </view>
+        <view class="weatherinfo">
+          <view class="temperature">{{currentTemperature}}</view>
+          <view class="description">{{description}}</view>
+          <view class="wind">{{wind}}</view>
+          <!-- <view class='air' style="background:{{airColor}};">{{pm25}} {{airClass}}</view> -->
+          <view class='air' style="background-color:{{airColor}}" bindtap="pmTap">{{pm25}} {{airClass}}            </view>
+        </view>
       </view>
     </view>
-  </view>
 
-  <scroll-view class="list" scroll-y="true" style="height:{{scrollHeight}}">
+    <!-- <view class="horizontalLine"></view> -->
 
-    <view class="list_item list_item_alter">
-      <view class="weatherDate">{{weatherDate1}}</view>
-      <view class="weatherIconX">
-        <image src='{{weatherIcon1Day}}' style='height:70px;width:70px;'></image>
-        <image src='{{weatherIcon1Night}}' style='height:70px;width:70px;'></image>
+    <scroll-view class="list" scroll-y="true" style="height:{{scrollHeight}}">
+
+      <view class="list_item list_item_alter">
+        <view class="weatherDate">{{weatherDate1}}</view>
+        <view class="weatherIconX">
+          <image src='{{weatherIcon1Day}}' style='height:70px;width:70px;'></image>
+          <image src='{{weatherIcon1Night}}' style='height:70px;width:70px;'></image>
+        </view>
+        <view class="descriptionX">{{description1}}</view>
+        <view class="temperatureX">{{temperature1}}</view>
       </view>
-      <view class="descriptionX">{{description1}}</view>
-      <view class="temperatureX">{{temperature1}}</view>
-    </view>
 
-    <view class="list_item">
-      <view class="weatherDate">{{weatherDate2}}</view>
-      <view class="weatherIconX">
-        <image src='{{weatherIcon2Day}}' style='height:70px;width:70px;'></image>
-        <image src='{{weatherIcon2Night}}' style='height:70px;width:70px;'></image>
+      <view class="list_item">
+        <view class="weatherDate">{{weatherDate2}}</view>
+        <view class="weatherIconX">
+          <image src='{{weatherIcon2Day}}' style='height:70px;width:70px;'></image>
+          <image src='{{weatherIcon2Night}}' style='height:70px;width:70px;'></image>
+        </view>
+        <view class="descriptionX">{{description2}}</view>
+        <view class="temperatureX">{{temperature2}}</view>
       </view>
-      <view class="descriptionX">{{description2}}</view>
-      <view class="temperatureX">{{temperature2}}</view>
-    </view>
 
-    <view class="list_item list_item_alter">
-      <view class="weatherDate">{{weatherDate3}}</view>
-      <view class="weatherIconX">
-        <image src='{{weatherIcon3Day}}' style='height:70px;width:70px;'></image>
-        <image src='{{weatherIcon3Night}}' style='height:70px;width:70px;'></image>
+      <view class="list_item list_item_alter">
+        <view class="weatherDate">{{weatherDate3}}</view>
+        <view class="weatherIconX">
+          <image src='{{weatherIcon3Day}}' style='height:70px;width:70px;'></image>
+          <image src='{{weatherIcon3Night}}' style='height:70px;width:70px;'></image>
+        </view>
+        <view class="descriptionX">{{description3}}</view>
+        <view class="temperatureX">{{temperature3}}</view>
       </view>
-      <view class="descriptionX">{{description3}}</view>
-      <view class="temperatureX">{{temperature3}}</view>
-    </view>
 
+    </scroll-view>
+
+    <view class="horizontalLine"></view>
+
+    <view class="livingIndex">
+
+      <view class="livingIndexTitle">
+        <text>穿衣：</text>
+      </view>
+      <view class="livingIndexText">
+        {{clothesWearing}}
+      </view>
+
+      <view class="horizontalLine"></view>
+      <view class="livingIndexTitle">
+        <text>紫外线：</text>
+      </view>
+      <view class="livingIndexText">
+        {{uvIndex}}
+      </view>
+
+      <view class="horizontalLine"></view>
+      <view class="livingIndexTitle">
+        <text>运动：</text>
+      </view>
+      <view class="livingIndexText">
+        {{exerciseIndex}}
+      </view>
+
+      <view class="horizontalLine"></view>
+      <view class="livingIndexTitle">
+        <text>感冒：</text>
+      </view>
+      <view class="livingIndexText">
+        {{fluIndex}}
+      </view>
+
+      <view class="horizontalLine"></view>
+      <view class="livingIndexTitle">
+        <text>洗车：</text>
+      </view>
+      <view class="livingIndexText">
+        {{carWashing}}
+      </view>
+
+    </view>
   </scroll-view>
-  
-  <view class="livingIndex">
-
-    <view class="livingIndexTitle">
-      <text>穿衣：</text>
-    </view>
-    <view class="livingIndexText">
-      {{clothesWearing}}
-    </view>
-
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      <text>紫外线：</text>
-    </view>
-    <view class="livingIndexText">
-      {{uvIndex}}
-    </view>
-
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      <text>运动：</text>
-    </view>
-    <view class="livingIndexText">
-      {{exerciseIndex}}
-    </view>
-
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      <text>感冒：</text>
-    </view>
-    <view class="livingIndexText">
-      {{fluIndex}}
-    </view>
-
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      <text>洗车：</text>
-    </view>
-    <view class="livingIndexText">
-      {{carWashing}}
-    </view>
-
-  </view>
-
 </view>

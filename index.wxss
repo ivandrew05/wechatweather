@@ -4,19 +4,35 @@ page {
   width: 100%;
   height: 100%;
   background-color: #f6f6f6;
+  overflow-y: hidden;
 }
 
 .container {
- display: block;
+  height: 500rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* font-family: 微软雅黑,宋体; */
+  box-sizing: border-box;
+  color: #FFFFFF;
+  font-size: 17px;
+  background-size:100% 100%
 }
 
+.background {
+  width: 100%;
+  height: 100%;
+  position:fixed; 
+  background-size:100% 100%;
+  z-index: -1;
+}
 .top {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: linear-gradient(#4990e2, #87c1f1);
   justify-content: center;
   align-items: center;
+
 }
 
 .location {
@@ -132,24 +148,22 @@ page {
   display: flex;
   flex-direction: row; 
   align-items: center;
-  background-color: #fff;
-  height: 80px;
+  height: 70px;
   width: 100%;
 }
 
 .list_item_alter {
   display: flex; 
   flex-direction: row; 
-  background-color: #f6f9fe;
   width: 100%;
-  height: 80px;
+  height: 70px;
 }
 
 .livingIndex {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: linear-gradient( #87c1f1, #4990e2);
+  /* background: linear-gradient( #87c1f1, #4990e2); */
   justify-content: left;
   align-items: left;
 }

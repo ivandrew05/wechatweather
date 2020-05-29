@@ -185,8 +185,8 @@ Page({
   pmTap(){
     console.log("成功")
     wx.showModal({
-      title: '空气质量',
-      content: '空气质量优',
+      title: '代码中',
+      content: '敬请期待',
     })
   },
   
