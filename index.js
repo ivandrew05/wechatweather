@@ -8,7 +8,7 @@ Page({
     let that = this;
     return {
       title: '分享',
-      path: '/pages/index',
+      path: 'pages/index/index',
       success: (res) => {
         console.log(res.shareTickets[0])
         wx.getShareInfo({
@@ -97,19 +97,17 @@ Page({
 
   // 计算滚动区域的高度
   calculateScrollHeight() {
-    let screenHeight = wx.getSystemInfoSync().screenHeight
     let windowHeight = wx.getSystemInfoSync().windowHeight 
-    
-    // console.log(screenHeight);
+    let windowWidth = wx.getSystemInfoSync().windowWidth
     // console.log(windowHeight);
+    // console.log(windowWidth);
 
-    let scrollHeight = windowHeight/2
+    // 小程序任何机型的宽都是750rpx，但windowHeight和windowWidth都是px为单位，故需要转换
+    let scrollHeight = windowHeight * 750 / windowWidth
 
     this.setData({
       scrollHeight: scrollHeight,
-      iconImageHeight: windowHeight/4
     });
-    
   },
   
   reverseTemperature(temperature){
@@ -126,9 +124,9 @@ Page({
   },
 
   getWeatherDate(date){
-    var index = date.indexOf("日")
+    var index = date.indexOf("(")
     var todayDate
-    todayDate = date.substring(0, index+1);
+    todayDate = date.substring(0, index-1);
     return todayDate;
   },
 
