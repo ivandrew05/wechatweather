@@ -39,82 +39,8 @@ Page({
   },
 
   onLoad: function() {
-
     this.calculateScrollHeight();
-
-    var that = this;
-
-    // 新建百度地图对象 
-    var BMap = new bmap.BMapWX({
-      ak: 'zVcyq32e7P7ouGaTIExV7wff2KhkCZOD'
-    });
-
-    var fail = function(data) {
-      console.log(data)
-    };
-
-    // 获取地图数据
-    var mapSuccess = function(data) {
-      console.log(data)
-      var mapData = data.originalData.result.addressComponent;
-      var location = mapData.city + ' ' + mapData.district;
-
-      that.setData({
-        location: location,
-      })
-    }
-
-    // 获取天气数据
-    var weatherSuccess = function(data) {
-      console.log(data)
-      var weatherData = data.originalData.results[0];
-
-      that.setData({
-        // location: weatherData.currentCity,
-        currentTemperature: that.reverseTemperature(weatherData.weather_data[0].temperature),
-        description: weatherData.weather_data[0].weather,
-        wind: weatherData.weather_data[0].wind,
-        pm25: weatherData.pm25,
-        airClass: that.getAirClass(weatherData.pm25),
-        airColor: that.getAirColor(weatherData.pm25),
-        weatherIconDay: that.getWeatherIconDay(weatherData.weather_data[0].weather),
-        weatherIconNight: that.getWeatherIconNight(weatherData.weather_data[0].weather),
-        clothesWearing: weatherData.index[0].des,
-        uvIndex: weatherData.index[4].des,
-        exerciseIndex: weatherData.index[3].des,
-        fluIndex: weatherData.index[2].des,
-        carWashing: weatherData.index[1].des,
-        weatherDate0: that.getWeatherDate(weatherData.weather_data[0].date),
-        weatherDate1: weatherData.weather_data[1].date,
-        weatherIcon1Day: that.getWeatherIconDay(weatherData.weather_data[1].weather),
-        weatherIcon1Night: that.getWeatherIconNight(weatherData.weather_data[1].weather),
-        description1: weatherData.weather_data[1].weather,
-        temperature1: that.reverseTemperature(weatherData.weather_data[1].temperature),
-        weatherDate2: weatherData.weather_data[2].date,
-        weatherIcon2Day: that.getWeatherIconDay(weatherData.weather_data[2].weather),
-        weatherIcon2Night: that.getWeatherIconNight(weatherData.weather_data[2].weather),
-        description2: weatherData.weather_data[2].weather,
-        temperature2: that.reverseTemperature(weatherData.weather_data[2].temperature),
-        weatherDate3: weatherData.weather_data[3].date,
-        weatherIcon3Day: that.getWeatherIconDay(weatherData.weather_data[3].weather),
-        weatherIcon3Night: that.getWeatherIconNight(weatherData.weather_data[3].weather),
-        description3: weatherData.weather_data[3].weather,
-        temperature3: that.reverseTemperature(weatherData.weather_data[3].temperature),
-      });
-    }
-
-    // 发起weather请求 
-    BMap.weather({
-      fail: fail,
-      success: weatherSuccess
-    });
-
-    // 发起regeocoding检索请求 
-    BMap.regeocoding({
-      fail: fail,
-      success: mapSuccess,
-    });
-
+    this.getWeather();
   },
 
   // 计算滚动区域的高度
@@ -131,7 +57,92 @@ Page({
       scrollHeight: scrollHeight,
     });
   },
-  
+
+  getWeather() {
+    var that = this;
+    // 新建百度地图对象 
+    var BMap = new bmap.BMapWX({
+      ak: 'zVcyq32e7P7ouGaTIExV7wff2KhkCZOD'
+    });
+
+    var fail = function(data) {
+      console.log(data)
+    };
+
+    // 获取地图数据并设置位置
+    var mapSuccess = function(data) {
+      console.log(data)
+      var mapData = data.originalData.result.addressComponent;
+      var location = mapData.city + ' ' + mapData.district;
+
+      that.setData({
+        location: location,
+      })
+    };
+
+    // 发起regeocoding检索请求
+    BMap.regeocoding({
+      fail: fail,
+      success: mapSuccess,
+    });
+
+    // 获取天气数据
+    var weatherSuccess = function(data) {
+      console.log(data)
+      var weatherData = data.originalData.results[0];
+
+      var currentWeatherIconDay = that.getWeatherIconDay(weatherData.weather_data[0].weather);
+      var currentWeatherIconNight = that.getWeatherIconNight(weatherData.weather_data[0].weather);
+      var currentTemperature = that.reverseTemperature(weatherData.weather_data[0].temperature);
+      var currentDate = that.getCurrentDate(weatherData.weather_data[0].date);
+      var currentDiscription = weatherData.weather_data[0].weather;
+      var currentWind = weatherData.weather_data[0].wind;
+      var currentPm25 = weatherData.pm25;
+      var currentAirClass = that.getAirClass(weatherData.pm25);
+      var currentAirColor = that.getAirColor(weatherData.pm25);
+
+      that.setData({
+        currentDate: currentDate,
+        currentWeatherIconDay: currentWeatherIconDay,
+        currentWeatherIconNight: currentWeatherIconNight,
+        currentTemperature: currentTemperature,
+        currentDescription: currentDiscription,
+        currentWind: currentWind,
+        currentPm25: currentPm25,
+        currentAirClass: currentAirClass,
+        currentAirColor: currentAirColor,
+
+        clothesWearing: weatherData.index[0].des,
+        uvIndex: weatherData.index[4].des,
+        exerciseIndex: weatherData.index[3].des,
+        fluIndex: weatherData.index[2].des,
+        carWashing: weatherData.index[1].des,
+
+        weatherDate1: weatherData.weather_data[1].date,
+        weatherIcon1Day: that.getWeatherIconDay(weatherData.weather_data[1].weather),
+        weatherIcon1Night: that.getWeatherIconNight(weatherData.weather_data[1].weather),
+        description1: weatherData.weather_data[1].weather,
+        temperature1: that.reverseTemperature(weatherData.weather_data[1].temperature),
+        weatherDate2: weatherData.weather_data[2].date,
+        weatherIcon2Day: that.getWeatherIconDay(weatherData.weather_data[2].weather),
+        weatherIcon2Night: that.getWeatherIconNight(weatherData.weather_data[2].weather),
+        description2: weatherData.weather_data[2].weather,
+        temperature2: that.reverseTemperature(weatherData.weather_data[2].temperature),
+        weatherDate3: weatherData.weather_data[3].date,
+        weatherIcon3Day: that.getWeatherIconDay(weatherData.weather_data[3].weather),
+        weatherIcon3Night: that.getWeatherIconNight(weatherData.weather_data[3].weather),
+        description3: weatherData.weather_data[3].weather,
+        temperature3: that.reverseTemperature(weatherData.weather_data[3].temperature),
+      })
+    }
+
+    // 发起weather请求 
+    BMap.weather({
+      fail: fail,
+      success: weatherSuccess
+    });
+  },
+
   // 转化温度格式，例如20~10℃转为10-20℃
   reverseTemperature(temperature) {
     var low;
@@ -147,7 +158,7 @@ Page({
   },
 
   //获取今天日期
-  getWeatherDate(date) {
+  getCurrentDate(date) {
     var index = date.indexOf("(")
     var todayDate
     todayDate = date.substring(0, index - 1);

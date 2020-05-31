@@ -8,18 +8,18 @@
 
     <view class="location">{{location}}</view>
 
-    <view class="today">今天 {{weatherDate0}}</view>
+    <view class="today">今天 {{currentDate}}</view>
 
     <view class="todayInfo">
       <view class="weatherIcon">
-        <image src='{{weatherIconDay}}' mode="aspectFit"></image>
-        <image src='{{weatherIconNight}}' mode="aspectFit"></image>
+        <image src='{{currentWeatherIconDay}}' mode="aspectFit"></image>
+        <image src='{{currentWeatherIconNight}}' mode="aspectFit"></image>
       </view>
       <view class="weatherinfo">
         <view class="temperature">{{currentTemperature}}</view>
-        <view class="description">{{description}}</view>
-        <view class="wind">{{wind}}</view>
-        <view class='air' style="background-color:{{airColor}}" bindtap="pmTap">{{pm25}} {{airClass}}</view>
+        <view class="description">{{currentDescription}}</view>
+        <view class="wind">{{currentWind}}</view>
+        <view class='air' style="background-color:{{currentAirColor}}" bindtap="pmTap">{{currentPm25}} {{currentAirClass}}</view>
       </view>
     </view>
 
