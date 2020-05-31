@@ -35,7 +35,6 @@ Page({
 
   data: {
     scrollHeight: 0,
-    iconImageHeight: 0,
     location: 'Loading...',
   },
 
@@ -132,7 +131,8 @@ Page({
       scrollHeight: scrollHeight,
     });
   },
-
+  
+  // 转化温度格式，例如20~10℃转为10-20℃
   reverseTemperature(temperature) {
     var low;
     var high;
@@ -146,6 +146,7 @@ Page({
     return result;
   },
 
+  //获取今天日期
   getWeatherDate(date) {
     var index = date.indexOf("(")
     var todayDate
@@ -153,6 +154,7 @@ Page({
     return todayDate;
   },
 
+  //获取空气等级
   getAirClass(pm25) {
     var airClass = "";
 
@@ -173,6 +175,7 @@ Page({
     return airClass;
   },
 
+  // 获取空气颜色
   getAirColor(pm25) {
     var airColor = "";
 
@@ -193,6 +196,7 @@ Page({
     return airColor;
   },
 
+  //获取PM25详细信息
   pmTap() {
     console.log("成功")
     wx.showModal({
@@ -201,6 +205,7 @@ Page({
     })
   },
 
+  //获取白天天气图标
   getWeatherIconDay: function(description) {
     var condition = String(description);
     var conditionDay = String(description);
@@ -327,6 +332,7 @@ Page({
     return url;
   },
 
+  //获取晚上天气图标
   getWeatherIconNight: function(description) {
     var condition = String(description);
     var conditionNight = String(description);
