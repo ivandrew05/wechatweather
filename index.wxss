@@ -81,7 +81,7 @@ page {
   border-radius: 10rpx;
 }
 
-.forecastList {
+.forecastArray {
   display: flex;
   flex-direction: row; 
   justify-content: center;

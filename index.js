@@ -97,25 +97,38 @@ Page({
       var currentDate = that.getCurrentDate(weatherData.weather_data[0].date);
       var currentDiscription = weatherData.weather_data[0].weather;
       var currentWind = weatherData.weather_data[0].wind;
-      var currentPm25 = weatherData.pm25;
-      var currentAirClass = that.getAirClass(weatherData.pm25);
-      var currentAirColor = that.getAirColor(weatherData.pm25);
+      var pm25 = weatherData.pm25;
+      var airClass = that.getAirClass(weatherData.pm25);
+      var airColor = that.getAirColor(weatherData.pm25);
+
+      var weatherArray = weatherData.weather_data;
+      var forecastArray = weatherArray.slice(1, );
+      // 用for loop修改array里面object的value(例如"20~10℃"修改为"10-20℃")
+      var i;
+      for (i = 0; i < forecastArray.length; i++) {
+        var correctTemperature = that.reverseTemperature(forecastArray[i].temperature);
+        var weatherIconDay = that.getWeatherIconDay(forecastArray[i].weather);
+        var weatherIconNight = that.getWeatherIconNight(forecastArray[i].weather);
+        forecastArray[i].temperature = correctTemperature;
+        forecastArray[i].dayPictureUrl = weatherIconDay;
+        forecastArray[i].nightPictureUrl = weatherIconNight;
+      }
 
       //重新排列array里面Object的顺序
       var array = weatherData.index;
       var arrayA = array.slice(0, 1);
-      var arrayB = array.slice(1,);
-      var arrayC= arrayB.reverse();
+      var arrayB = array.slice(1, );
+      var arrayC = arrayB.reverse();
       //合并两个array为一个array
       var livingIndexArray = arrayA.concat(arrayC);
 
-      //修改array里面object的value(把"紫外线强度"改成"紫外线")
+      //修改array里面object的value(例如"紫外线强度"改成"紫外线：")
       livingIndexArray[0].title = "穿衣：";
       livingIndexArray[1].title = "紫外线：";
       livingIndexArray[2].title = "运动：";
       livingIndexArray[3].title = "感冒：";
       livingIndexArray[4].title = "洗车：";
-      console.log(livingIndexArray)
+      // console.log(livingIndexArray)
 
       that.setData({
         currentDate: currentDate,
@@ -124,27 +137,11 @@ Page({
         currentTemperature: currentTemperature,
         currentDescription: currentDiscription,
         currentWind: currentWind,
-        currentPm25: currentPm25,
-        currentAirClass: currentAirClass,
-        currentAirColor: currentAirColor,
-
+        pm25: pm25,
+        airClass: airClass,
+        airColor: airColor,
+        forecastArray: forecastArray,
         livingIndexArray: livingIndexArray,
-
-        weatherDate1: weatherData.weather_data[1].date,
-        weatherIcon1Day: that.getWeatherIconDay(weatherData.weather_data[1].weather),
-        weatherIcon1Night: that.getWeatherIconNight(weatherData.weather_data[1].weather),
-        description1: weatherData.weather_data[1].weather,
-        temperature1: that.reverseTemperature(weatherData.weather_data[1].temperature),
-        weatherDate2: weatherData.weather_data[2].date,
-        weatherIcon2Day: that.getWeatherIconDay(weatherData.weather_data[2].weather),
-        weatherIcon2Night: that.getWeatherIconNight(weatherData.weather_data[2].weather),
-        description2: weatherData.weather_data[2].weather,
-        temperature2: that.reverseTemperature(weatherData.weather_data[2].temperature),
-        weatherDate3: weatherData.weather_data[3].date,
-        weatherIcon3Day: that.getWeatherIconDay(weatherData.weather_data[3].weather),
-        weatherIcon3Night: that.getWeatherIconNight(weatherData.weather_data[3].weather),
-        description3: weatherData.weather_data[3].weather,
-        temperature3: that.reverseTemperature(weatherData.weather_data[3].temperature),
       })
     }
 

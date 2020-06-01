@@ -19,49 +19,33 @@
         <view class="temperature">{{currentTemperature}}</view>
         <view class="description">{{currentDescription}}</view>
         <view class="wind">{{currentWind}}</view>
-        <view class='air' style="background-color:{{currentAirColor}}" bindtap="pmTap">{{currentPm25}} {{currentAirClass}}</view>
+        <view class='air' style="background-color:{{airColor}}" bindtap="pmTap">{{pm25}} {{airClass}}</view>
       </view>
     </view>
 
-    <view class="forecastList">
-      <view class="weatherDate">{{weatherDate1}}</view>
+    <!-- wx:for列表渲染三天天气预报 -->
+    <!-- <block wx:for="{{forecastArray}}" wx:for-item="item" wx:key="key"> -->
+    <view class="forecastArray" wx:for="{{forecastArray}}" wx:for-item="item" wx:key="key">
+      <view class="weatherDate">{{item.date}}</view>
       <view class="weatherIconX">
-        <image src='{{weatherIcon1Day}}' style='height:140rpx;width:140rpx;'></image>
-        <image src='{{weatherIcon1Night}}' style='height:140rpx;width:140rpx;'></image>
+        <image src='{{item.dayPictureUrl}}' style='height:140rpx;width:140rpx;'></image>
+        <image src='{{item.nightPictureUrl}}' style='height:140rpx;width:140rpx;'></image>
       </view>
-      <view class="descriptionX">{{description1}}</view>
-      <view class="temperatureX">{{temperature1}}</view>
+      <view class="descriptionX">{{item.weather}}</view>
+      <view class="temperatureX">{{item.temperature}}</view>
     </view>
+    <!-- </block> -->
 
-    <view class="forecastList">
-      <view class="weatherDate">{{weatherDate2}}</view>
-      <view class="weatherIconX">
-        <image src='{{weatherIcon2Day}}' style='height:140rpx;width:140rpx;'></image>
-        <image src='{{weatherIcon2Night}}' style='height:140rpx;width:140rpx;'></image>
+    <!-- wx:for列表渲染生活指数 -->
+    <view wx:for="{{livingIndexArray}}" wx:for-item="item" wx:key="key">
+      <view class="horizontalLine"></view>
+      <view class="livingIndexTitle">
+        {{item.title}}
       </view>
-      <view class="descriptionX">{{description2}}</view>
-      <view class="temperatureX">{{temperature2}}</view>
-    </view>
-
-    <view class="forecastList">
-      <view class="weatherDate">{{weatherDate3}}</view>
-      <view class="weatherIconX">
-        <image src='{{weatherIcon3Day}}' style='height:140rpx;width:140rpx;'></image>
-        <image src='{{weatherIcon3Night}}' style='height:140rpx;width:140rpx;'></image>
+      <view class="livingIndexText">
+        {{item.des}}
       </view>
-      <view class="descriptionX">{{description3}}</view>
-      <view class="temperatureX">{{temperature3}}</view>
     </view>
-
-  <block wx:for="{{livingIndexArray}}" wx:for-item="item" wx:key="key">
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      {{item.title}}
-    </view>
-    <view class="livingIndexText">
-      {{item.des}}
-    </view>
-   </block>
 
   </scroll-view>
 </view>
