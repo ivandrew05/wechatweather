@@ -53,47 +53,15 @@
       <view class="temperatureX">{{temperature3}}</view>
     </view>
 
-    <view class="horizontalLine"></view>
-
-    <view class="livingIndexTitle">
-      <text>穿衣：</text>
-    </view>
-    <view class="livingIndexText">
-      {{clothesWearing}}
-    </view>
-
-    <view class="horizontalLine"></view>
-
-    <view class="livingIndexTitle">
-      <text>紫外线：</text>
-    </view>
-    <view class="livingIndexText">
-      {{uvIndex}}
-    </view>
-
+  <block wx:for="{{livingIndexArray}}" wx:for-item="item" wx:key="key">
     <view class="horizontalLine"></view>
     <view class="livingIndexTitle">
-      <text>运动：</text>
+      {{item.title}}
     </view>
     <view class="livingIndexText">
-      {{exerciseIndex}}
+      {{item.des}}
     </view>
-
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      <text>感冒：</text>
-    </view>
-    <view class="livingIndexText">
-      {{fluIndex}}
-    </view>
-
-    <view class="horizontalLine"></view>
-    <view class="livingIndexTitle">
-      <text>洗车：</text>
-    </view>
-    <view class="livingIndexText">
-      {{carWashing}}
-    </view>
+   </block>
 
   </scroll-view>
 </view>

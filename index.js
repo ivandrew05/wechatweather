@@ -101,6 +101,22 @@ Page({
       var currentAirClass = that.getAirClass(weatherData.pm25);
       var currentAirColor = that.getAirColor(weatherData.pm25);
 
+      //重新排列array里面Object的顺序
+      var array = weatherData.index;
+      var arrayA = array.slice(0, 1);
+      var arrayB = array.slice(1,);
+      var arrayC= arrayB.reverse();
+      //合并两个array为一个array
+      var livingIndexArray = arrayA.concat(arrayC);
+
+      //修改array里面object的value(把"紫外线强度"改成"紫外线")
+      livingIndexArray[0].title = "穿衣：";
+      livingIndexArray[1].title = "紫外线：";
+      livingIndexArray[2].title = "运动：";
+      livingIndexArray[3].title = "感冒：";
+      livingIndexArray[4].title = "洗车：";
+      console.log(livingIndexArray)
+
       that.setData({
         currentDate: currentDate,
         currentWeatherIconDay: currentWeatherIconDay,
@@ -112,11 +128,7 @@ Page({
         currentAirClass: currentAirClass,
         currentAirColor: currentAirColor,
 
-        clothesWearing: weatherData.index[0].des,
-        uvIndex: weatherData.index[4].des,
-        exerciseIndex: weatherData.index[3].des,
-        fluIndex: weatherData.index[2].des,
-        carWashing: weatherData.index[1].des,
+        livingIndexArray: livingIndexArray,
 
         weatherDate1: weatherData.weather_data[1].date,
         weatherIcon1Day: that.getWeatherIconDay(weatherData.weather_data[1].weather),
