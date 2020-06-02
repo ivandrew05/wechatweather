@@ -1,8 +1,7 @@
-<!--index.wxml-->
 
 <view class="container">
 
-  <scroll-view scroll-y='true' style='height:{{scrollHeight}}rpx'>
+  <scroll-view scroll-y='true' style='height:{{scrollHeight}}rpx;'>
 
     <image class='background' src="/images/background/02.jpg" mode="aspectFill"></image>
 
@@ -24,7 +23,6 @@
     </view>
 
     <!-- wx:for列表渲染三天天气预报 -->
-    <!-- <block wx:for="{{forecastArray}}" wx:for-item="item" wx:key="key"> -->
     <view class="forecastArray" wx:for="{{forecastArray}}" wx:for-item="item" wx:key="key">
       <view class="weatherDate">{{item.date}}</view>
       <view class="weatherIconX">
@@ -34,7 +32,6 @@
       <view class="descriptionX">{{item.weather}}</view>
       <view class="temperatureX">{{item.temperature}}</view>
     </view>
-    <!-- </block> -->
 
     <!-- wx:for列表渲染生活指数 -->
     <view wx:for="{{livingIndexArray}}" wx:for-item="item" wx:key="key">
@@ -47,5 +44,9 @@
       </view>
     </view>
 
+    <view class="bottom">
+    </view>
+
   </scroll-view>
+
 </view>

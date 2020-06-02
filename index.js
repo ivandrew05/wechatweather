@@ -52,7 +52,7 @@ Page({
 
     // 小程序任何机型的宽都是750rpx，但windowHeight和windowWidth都是px为单位，故需要转换
     let scrollHeight = windowHeight * 750 / windowWidth
-
+    // console.log(scrollHeight)
     this.setData({
       scrollHeight: scrollHeight,
     });
