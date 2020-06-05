@@ -75,6 +75,8 @@ Page({
       console.log(data)
       var mapData = data.originalData.result.addressComponent;
       var location = mapData.city + ' ' + mapData.district;
+      var currentCity = mapData.city;
+      that.getHourlyWeather(currentCity);
 
       that.setData({
         location: location,
@@ -92,29 +94,29 @@ Page({
       console.log(data)
       var weatherData = data.originalData.results[0];
 
-      var currentWeatherIconDay = that.getWeatherIconDay(weatherData.weather_data[0].weather);
-      var currentWeatherIconNight = that.getWeatherIconNight(weatherData.weather_data[0].weather);
-      var currentTemperature = that.reverseTemperature(weatherData.weather_data[0].temperature);
-      var currentDate = that.getCurrentDate(weatherData.weather_data[0].date);
-      var currentDiscription = weatherData.weather_data[0].weather;
-      var currentWind = weatherData.weather_data[0].wind;
+      var weatherArray = weatherData.weather_data;
+      // 用for loop修改array里面object的value(例如"20~10℃"修改为"10-20℃")
+      var i;
+      for (i = 0; i < weatherArray.length; i++) {
+        var correctTemperature = that.reverseTemperature(weatherArray[i].temperature);
+        var weatherIconDay = that.getWeatherIconDay(weatherArray[i].weather);
+        var weatherIconNight = that.getWeatherIconNight(weatherArray[i].weather);
+        weatherArray[i].temperature = correctTemperature;
+        weatherArray[i].dayPictureUrl = weatherIconDay;
+        weatherArray[i].nightPictureUrl = weatherIconNight;
+      }
+      var forecastArray = weatherArray.slice(1);
+
+      var currentWeatherIconDay = weatherArray[0].dayPictureUrl;
+      var currentWeatherIconNight = weatherArray[0].nightPictureUrl;
+      var currentTemperature = weatherArray[0].temperature;
+      var currentDate = that.getCurrentDate(weatherArray[0].date);
+      var currentDiscription = weatherArray[0].weather;
+      var currentWind = weatherArray[0].wind;
       var pm25 = weatherData.pm25;
       var airArray = that.getAir(weatherData.pm25);
       var airClass = airArray[0];
       var airColor = airArray[1];
-
-      var weatherArray = weatherData.weather_data;
-      var forecastArray = weatherArray.slice(1, );
-      // 用for loop修改array里面object的value(例如"20~10℃"修改为"10-20℃")
-      var i;
-      for (i = 0; i < forecastArray.length; i++) {
-        var correctTemperature = that.reverseTemperature(forecastArray[i].temperature);
-        var weatherIconDay = that.getWeatherIconDay(forecastArray[i].weather);
-        var weatherIconNight = that.getWeatherIconNight(forecastArray[i].weather);
-        forecastArray[i].temperature = correctTemperature;
-        forecastArray[i].dayPictureUrl = weatherIconDay;
-        forecastArray[i].nightPictureUrl = weatherIconNight;
-      }
 
       //重新排列array里面Object的顺序
       var array = weatherData.index;
@@ -159,14 +161,14 @@ Page({
   reverseTemperature(temperature) {
     var low;
     var high;
-    var result;
+    var correctTemperature;
     var index = temperature.indexOf("~");
     var length = temperature.length;
 
     low = temperature.substring(index + 2, length - 1);
     high = temperature.substring(0, index - 1);
-    result = low + " - " + high + "℃";
-    return result;
+    correctTemperature = low + " - " + high + "℃";
+    return correctTemperature;
   },
 
   //获取今天日期
@@ -188,7 +190,6 @@ Page({
     } else if (pm25 > 50 && pm25 <= 100) {
       airClass = "良";
       airColor = "#edc444";
-      // #edc444 #ffde33
     } else if (pm25 > 100 && pm25 <= 150) {
       airClass = "轻度污染";
       airColor = "#ff9933";
@@ -355,6 +356,67 @@ Page({
     }
 
     return weatherIconNight;
+  },
+
+  // 获取24小时天气预报
+  getHourlyWeather(currentCity) {
+    // var currentCity = currentCity;
+    // console.log(currentCity)
+    var that = this;
+
+    wx.request({
+      // 从其他地方传递过来的变量用'+ +'包起来
+      url: 'https://api.seniverse.com/v3/weather/hourly.json?key=StZ9WiTb0wgA81Kkq&location=' + currentCity + '&language=zh-Hans&unit=c&start=0&hours=24',
+      data: {
+        x: '',
+        y: ''
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        console.log(res.data)
+        var hourlyWeather = res.data.results[0].hourly;
+        // console.log(hourlyWeather)
+        that.setHourlyWeather(hourlyWeather);
+      }
+    })
+  },
+
+  //设置24小时天气预报
+  setHourlyWeather(hourlyWeather) {
+    console.log(hourlyWeather)
+    var that = this;
+
+    var i;
+    for (i = 0; i < hourlyWeather.length; i++) {
+      var hourlyWeatherTime = hourlyWeather[i].time;
+      var shortHourlyTime = that.getShortHourlyTime(hourlyWeatherTime);
+      hourlyWeather[i].time = shortHourlyTime;
+      var hourlyWeatherText = hourlyWeather[i].text;
+
+      if (shortHourlyTime > 6 && shortHourlyTime < 18) {
+        var hourlyWeatherIcon = that.getWeatherIconDay(hourlyWeatherText);
+        hourlyWeather[i].text = hourlyWeatherIcon;
+      }
+      else{
+        var hourlyWeatherIcon = that.getWeatherIconNight(hourlyWeatherText);
+        hourlyWeather[i].text = hourlyWeatherIcon;
+      }
+
+    }
+
+    that.setData({
+      hourlyWeather: hourlyWeather,
+    })
+
+  },
+
+  //获取简短的时间
+  getShortHourlyTime(hourlyWeatherTime) {
+    var index = hourlyWeatherTime.indexOf("T")
+    var shortHourlyTime = hourlyWeatherTime.substring(index + 1, index + 3);
+    return shortHourlyTime;
   },
 
 })

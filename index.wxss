@@ -41,7 +41,7 @@ page {
   display: flex;
   flex-direction: row;
   height: 360rpx;
-  padding: 10rpx 6rpx 0 20rpx;
+  padding: 10rpx 6rpx 100rpx 20rpx;
   justify-content: center;
   align-items: center;
 }
@@ -55,7 +55,6 @@ page {
 .weatherinfo {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   width: 40%;
 }
@@ -78,6 +77,24 @@ page {
   font-size: 28rpx;
   margin-top: 4rpx;
   border-radius: 10rpx;
+}
+
+.hourlyWeather{
+  display: flex;
+  flex-direction: row;
+  padding: 20rpx 20rpx 0rpx 20rpx;
+}
+
+.hourlyUnit{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 32rpx;
+  padding-right: 54rpx;
+}
+
+.hourlyTime{
+ padding-bottom: 20rpx;
 }
 
 .forecastArray {
@@ -134,5 +151,5 @@ page {
 }
 
 .bottom{
-  padding-top: 300rpx;
+  padding-top: 50rpx;
 }
