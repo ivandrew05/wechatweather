@@ -75,8 +75,11 @@ Page({
       console.log(data)
       var mapData = data.originalData.result.addressComponent;
       var location = mapData.city + ' ' + mapData.district;
-      var currentCity = mapData.city;
-      that.getHourlyWeather(currentCity);
+      var longitude = data.originalData.result.location.lng;
+      var latitude = data.originalData.result.location.lat;
+      var jinWeiDu = latitude + ":" + longitude;
+      that.getHourlyWeather(jinWeiDu);
+      that.getForecast15(jinWeiDu);
 
       that.setData({
         location: location,
@@ -205,7 +208,6 @@ Page({
     }
 
     var air = [airClass, airColor];
-    // console.log(air)
     // air = ["良","#edc444"]
     return air
   },
@@ -283,7 +285,7 @@ Page({
     } else if (conditionDay == "霾") {
       weatherIconDay = "/images/33-mai.svg";
     } else {
-      weatherIconDay = "/images/unknow.svg";
+      weatherIconDay = "/images/unknown.svg";
     }
 
     return weatherIconDay;
@@ -352,21 +354,20 @@ Page({
     } else if (conditionNight == "霾") {
       weatherIconNight = "/images/33-mai.svg";
     } else {
-      weatherIconNight = "/images/unknow.svg";
+      weatherIconNight = "/images/unknown.svg";
     }
 
     return weatherIconNight;
   },
 
   // 获取24小时天气预报
-  getHourlyWeather(currentCity) {
-    // var currentCity = currentCity;
-    // console.log(currentCity)
+  getHourlyWeather(jinWeiDu) {
+    // var jinWeiDu = jinWeiDu;
     var that = this;
 
     wx.request({
       // 从其他地方传递过来的变量用'+ +'包起来
-      url: 'https://api.seniverse.com/v3/weather/hourly.json?key=StZ9WiTb0wgA81Kkq&location=' + currentCity + '&language=zh-Hans&unit=c&start=0&hours=24',
+      url: 'https://api.seniverse.com/v3/weather/hourly.json?key=StZ9WiTb0wgA81Kkq&location=' + jinWeiDu + '&language=zh-Hans&unit=c&start=0&hours=24',
       data: {
         x: '',
         y: ''
@@ -377,7 +378,6 @@ Page({
       success(res) {
         console.log(res.data)
         var hourlyWeather = res.data.results[0].hourly;
-        // console.log(hourlyWeather)
         that.setHourlyWeather(hourlyWeather);
       }
     })
@@ -385,38 +385,112 @@ Page({
 
   //设置24小时天气预报
   setHourlyWeather(hourlyWeather) {
-    console.log(hourlyWeather)
+    // console.log(hourlyWeather)
     var that = this;
 
+    // 用for loop修改array里面object的time和text
     var i;
     for (i = 0; i < hourlyWeather.length; i++) {
       var hourlyWeatherTime = hourlyWeather[i].time;
       var shortHourlyTime = that.getShortHourlyTime(hourlyWeatherTime);
+      hourlyWeather[0].time = "现在";
       hourlyWeather[i].time = shortHourlyTime;
-      var hourlyWeatherText = hourlyWeather[i].text;
 
+      var hourlyWeatherText = hourlyWeather[i].text;
       if (shortHourlyTime > 6 && shortHourlyTime < 18) {
         var hourlyWeatherIcon = that.getWeatherIconDay(hourlyWeatherText);
         hourlyWeather[i].text = hourlyWeatherIcon;
-      }
-      else{
+      } else {
         var hourlyWeatherIcon = that.getWeatherIconNight(hourlyWeatherText);
         hourlyWeather[i].text = hourlyWeatherIcon;
       }
-
     }
 
     that.setData({
       hourlyWeather: hourlyWeather,
     })
-
   },
 
-  //获取简短的时间
+  //获取精简格式的时间
   getShortHourlyTime(hourlyWeatherTime) {
     var index = hourlyWeatherTime.indexOf("T")
     var shortHourlyTime = hourlyWeatherTime.substring(index + 1, index + 3);
     return shortHourlyTime;
   },
+
+  // 获取15天天气预报
+  getForecast15(jinWeiDu) {
+    var that = this;
+    wx.request({
+      url: 'https://api.seniverse.com/v3/weather/daily.json?key=StZ9WiTb0wgA81Kkq&location=' + jinWeiDu + '&language=zh-Hans&unit=c&start=0&days=15',
+      data: {
+        x: '',
+        y: ''
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        console.log(res.data)
+        var forecast15Array = res.data.results[0].daily;
+        that.setForecast15Array(forecast15Array);
+      }
+    })
+  },
+
+  // 设置15天天气预报
+  setForecast15Array(forecast15Array) {
+    var that = this;
+    console.log(forecast15Array)
+
+    var low = forecast15Array[0].low;
+    var high = forecast15Array[0].high;
+    var todayTemperature = low + " - " + high + "℃";
+
+    // var weekday = that.getWeekday("2020-06-07")
+    // var object = weekday;
+    // forecast15Array[0].week_day = weekday;
+
+    var i;
+    for (i = 0; i < forecast15Array.length; i++) {
+      var date = forecast15Array[i].date;
+      var dailyIconDay = forecast15Array[i].text_day;
+      var dailyIconNight = forecast15Array[i].text_night;
+      var dailyIconDay = that.getWeatherIconDay(dailyIconDay);
+      var dailyIconNight = that.getWeatherIconNight(dailyIconNight);
+      var shortDate = that.getShortDate(date);
+      forecast15Array[0].date = '今天';
+      forecast15Array[1].date = '明天';
+      forecast15Array[i].date = shortDate;
+      forecast15Array[i].code_day = dailyIconDay;
+      forecast15Array[i].code_night = dailyIconNight;
+    }
+
+    that.setData({
+      forecast15Array: forecast15Array,
+      todayTemperature: todayTemperature,
+    })
+  },
+
+  // 获取精简格式的日期
+  getShortDate(date) {
+    var index = date.indexOf("-")
+    var shortDate1 = date.substring(index + 1, index + 3);
+    var shortDate2 = date.substring(index + 4, );
+    var shortDate = shortDate1 + "/" + shortDate2
+    return shortDate;
+  },
+
+  //Javascript new Date()和getDay()获取日期对应星期几
+  // getWeekday(date) {
+  //   var currentDate = new Date(date);
+  //   // console.log(currentDate)
+  //   var index = currentDate.getDay();
+  //   // console.log(index)
+  //   var weekdayArray = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+  //   var weekday = weekdayArray[index]
+  //   console.log(weekday)
+  //   return weekday;
+  // },
 
 })
