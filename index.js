@@ -72,14 +72,16 @@ Page({
 
     // 获取地图数据并设置位置
     var mapSuccess = function(data) {
-      console.log(data)
+      // console.log(data)
       var mapData = data.originalData.result.addressComponent;
       var location = mapData.city + ' ' + mapData.district;
       var longitude = data.originalData.result.location.lng;
       var latitude = data.originalData.result.location.lat;
       var jinWeiDu = latitude + ":" + longitude;
+      that.getCurrentWeather(jinWeiDu);
       that.getHourlyWeather(jinWeiDu);
       that.getForecast15(jinWeiDu);
+      that.getairQuality(jinWeiDu);
 
       that.setData({
         location: location,
@@ -94,32 +96,8 @@ Page({
 
     // 获取天气数据
     var weatherSuccess = function(data) {
-      console.log(data)
+      // console.log(data)
       var weatherData = data.originalData.results[0];
-
-      var weatherArray = weatherData.weather_data;
-      // 用for loop修改array里面object的value(例如"20~10℃"修改为"10-20℃")
-      var i;
-      for (i = 0; i < weatherArray.length; i++) {
-        var correctTemperature = that.reverseTemperature(weatherArray[i].temperature);
-        var weatherIconDay = that.getWeatherIconDay(weatherArray[i].weather);
-        var weatherIconNight = that.getWeatherIconNight(weatherArray[i].weather);
-        weatherArray[i].temperature = correctTemperature;
-        weatherArray[i].dayPictureUrl = weatherIconDay;
-        weatherArray[i].nightPictureUrl = weatherIconNight;
-      }
-      var forecastArray = weatherArray.slice(1);
-
-      var currentWeatherIconDay = weatherArray[0].dayPictureUrl;
-      var currentWeatherIconNight = weatherArray[0].nightPictureUrl;
-      var currentTemperature = weatherArray[0].temperature;
-      var currentDate = that.getCurrentDate(weatherArray[0].date);
-      var currentDiscription = weatherArray[0].weather;
-      var currentWind = weatherArray[0].wind;
-      var pm25 = weatherData.pm25;
-      var airArray = that.getAir(weatherData.pm25);
-      var airClass = airArray[0];
-      var airColor = airArray[1];
 
       //重新排列array里面Object的顺序
       var array = weatherData.index;
@@ -139,16 +117,6 @@ Page({
 
       // 传递数据到wxml
       that.setData({
-        currentDate: currentDate,
-        currentWeatherIconDay: currentWeatherIconDay,
-        currentWeatherIconNight: currentWeatherIconNight,
-        currentTemperature: currentTemperature,
-        currentDescription: currentDiscription,
-        currentWind: currentWind,
-        pm25: pm25,
-        airClass: airClass,
-        airColor: airColor,
-        forecastArray: forecastArray,
         livingIndexArray: livingIndexArray,
       })
     }
@@ -172,44 +140,6 @@ Page({
     high = temperature.substring(0, index - 1);
     correctTemperature = low + " - " + high + "℃";
     return correctTemperature;
-  },
-
-  //获取今天日期
-  getCurrentDate(date) {
-    var index = date.indexOf("(")
-    var todayDate
-    todayDate = date.substring(0, index - 1);
-    return todayDate;
-  },
-
-  //获取空气
-  getAir(pm25) {
-    var airClass = "";
-    var airColor = "";
-
-    if (pm25 <= 50) {
-      airClass = "优";
-      airColor = "#009966";
-    } else if (pm25 > 50 && pm25 <= 100) {
-      airClass = "良";
-      airColor = "#edc444";
-    } else if (pm25 > 100 && pm25 <= 150) {
-      airClass = "轻度污染";
-      airColor = "#ff9933";
-    } else if (pm25 > 150 && pm25 <= 200) {
-      airClass = "中度污染";
-      airColor = "#cc0033";
-    } else if (pm25 > 200 && pm25 <= 300) {
-      airClass = "重度污染";
-      airColor = "#660099";
-    } else {
-      airClass = "严重污染";
-      airColor = "#7e0023";
-    }
-
-    var air = [airClass, airColor];
-    // air = ["良","#edc444"]
-    return air
   },
 
   //获取PM25详细信息
@@ -376,7 +306,7 @@ Page({
         'content-type': 'application/json' // 默认值
       },
       success(res) {
-        console.log(res.data)
+        // console.log(res.data)
         var hourlyWeather = res.data.results[0].hourly;
         that.setHourlyWeather(hourlyWeather);
       }
@@ -418,11 +348,168 @@ Page({
     return shortHourlyTime;
   },
 
-  // 获取15天天气预报
+  // 获取昨天和未来15天天气
   getForecast15(jinWeiDu) {
     var that = this;
     wx.request({
-      url: 'https://api.seniverse.com/v3/weather/daily.json?key=StZ9WiTb0wgA81Kkq&location=' + jinWeiDu + '&language=zh-Hans&unit=c&start=0&days=15',
+      url: 'https://api.seniverse.com/v3/weather/daily.json?key=StZ9WiTb0wgA81Kkq&location=' + jinWeiDu + '&language=zh-Hans&unit=c&start=-1&days=16',
+      data: {
+        x: '',
+        y: ''
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        // console.log(res.data)
+        var forecast15Array = res.data.results[0].daily;
+        that.setForecast15Array(forecast15Array);
+      }
+    })
+  },
+
+  // 设置昨天和未来15天天气
+  setForecast15Array(forecast15Array) {
+    var that = this;
+    // console.log(forecast15Array)
+
+    var low = forecast15Array[1].low;
+    var high = forecast15Array[1].high;
+    var todayTemperature = low + " - " + high + "℃";
+
+    var i;
+    for (i = 0; i < forecast15Array.length; i++) {
+      var date = forecast15Array[i].date;
+      var dailyIconDay = forecast15Array[i].text_day;
+      var dailyIconNight = forecast15Array[i].text_night;
+      var windDirection = forecast15Array[i].wind_direction + '风';
+      var windScale = forecast15Array[i].wind_scale + '级';
+      var dailyIconDay = that.getWeatherIconDay(dailyIconDay);
+      var dailyIconNight = that.getWeatherIconNight(dailyIconNight);
+      var shortDate = that.getShortDate(date);
+      var weekday = that.getWeekday(date);
+      forecast15Array[0].weekday = '昨天';
+      forecast15Array[1].weekday = '今天';
+      forecast15Array[2].weekday = '明天';
+      forecast15Array[i].weekday = weekday;
+      forecast15Array[i].shortDate = shortDate;
+      forecast15Array[i].code_day = dailyIconDay;
+      forecast15Array[i].code_night = dailyIconNight;
+      forecast15Array[i].wind_direction = windDirection;
+      forecast15Array[i].wind_scale = windScale;
+      var todayIconDay = forecast15Array[1].code_day;
+      var todayIconNight = forecast15Array[1].code_night;
+      var todayWind = forecast15Array[1].wind_direction + forecast15Array[1].wind_scale;
+      var todayWeather = that.getTodayWeather(forecast15Array);
+      var todayWeekday = that.getWeekday(forecast15Array[1].date);
+      var todayDate = that.getTodayDate(forecast15Array[1].date);
+      var todayDateInfo = '今天 ' + todayWeekday + ' ' + todayDate;
+    }
+
+    that.setData({
+      forecast15Array: forecast15Array,
+      todayTemperature: todayTemperature,
+      todayIconDay: todayIconDay,
+      todayIconNight: todayIconNight,
+      todayWind: todayWind,
+      todayWeather: todayWeather,
+      todayDateInfo: todayDateInfo,
+    })
+  },
+
+  // 获取精简格式的日期
+  getShortDate(date) {
+    var index = date.indexOf("-")
+    var shortDate1 = date.substring(index + 1, index + 3);
+    var shortDate2 = date.substring(index + 4, );
+    var shortDate = shortDate1 + "/" + shortDate2;
+    return shortDate;
+  },
+
+  //获取今天日期
+  getTodayDate(date) {
+    var index = date.indexOf("-")
+    var todayDate1 = date.substring(index + 1, index + 3);
+    var todayDate2 = date.substring(index + 4);
+    var todayDate = todayDate1 + "月" + todayDate2 + "日";
+    return todayDate;
+  },
+
+  //Javascript new Date()和getDay()获取日期对应星期几
+  getWeekday(date) {
+    var currentDate = new Date(date);
+    // console.log(currentDate)
+    var index = currentDate.getDay();
+    // console.log(index)
+    var weekdayArray = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    var weekday = weekdayArray[index]
+    // console.log(weekday)
+    return weekday;
+  },
+
+  //获取今天天气文字描述
+  getTodayWeather(forecast15Array) {
+    if (forecast15Array[1].text_day == forecast15Array[1].text_night) {
+      var todayWeather = forecast15Array[1].text_day
+    } else {
+      todayWeather = forecast15Array[1].text_day + '转' + forecast15Array[1].text_night
+    }
+    return todayWeather
+  },
+
+  // 获取逐日空气质量预报
+  getairQuality(jinWeiDu) {
+    var that = this;
+    wx.request({
+      url: 'https://api.seniverse.com/v3/air/daily.json?key=StZ9WiTb0wgA81Kkq&language=zh-Hans&location=' + jinWeiDu + '',
+      data: {
+        x: '',
+        y: ''
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        // console.log(res.data)
+        var airQuality = res.data.results[0].daily;
+        // console.log(airQuality)
+        var aqi = airQuality[0].aqi;
+        var airText = airQuality[0].quality;
+        var airColor = that.getAirColor(aqi)
+
+        that.setData({
+          aqi: aqi,
+          airText: airText,
+          airColor: airColor,
+        })
+      }
+    })
+  },
+
+  //获取空气质量颜色
+  getAirColor(aqi) {
+    var airColor = '';
+    if (aqi <= 50) {
+      airColor = "#009966";
+    } else if (aqi > 50 && aqi <= 100) {
+      airColor = "#edc444";
+    } else if (aqi > 100 && aqi <= 150) {
+      airColor = "#ff9933";
+    } else if (aqi > 150 && aqi <= 200) {
+      airColor = "#cc0033";
+    } else if (aqi > 200 && aqi <= 300) {
+      airColor = "#660099";
+    } else {
+      airColor = "#7e0023";
+    }
+    return airColor
+  },
+
+  // 获取当前天气
+  getCurrentWeather(jinWeiDu) {
+    var that = this;
+    wx.request({
+      url: 'https://api.seniverse.com/v3/weather/now.json?key=StZ9WiTb0wgA81Kkq&location=' + jinWeiDu + '&language=zh-Hans&unit=c',
       data: {
         x: '',
         y: ''
@@ -432,65 +519,40 @@ Page({
       },
       success(res) {
         console.log(res.data)
-        var forecast15Array = res.data.results[0].daily;
-        that.setForecast15Array(forecast15Array);
+        var currentWeather = res.data.results[0];
+        // console.log(currentWeather)
+        that.setCurrentWeather(currentWeather);
       }
     })
   },
 
-  // 设置15天天气预报
-  setForecast15Array(forecast15Array) {
+  //设置当前天气
+  setCurrentWeather(currentWeather) {
     var that = this;
-    console.log(forecast15Array)
-
-    var low = forecast15Array[0].low;
-    var high = forecast15Array[0].high;
-    var todayTemperature = low + " - " + high + "℃";
-
-    // var weekday = that.getWeekday("2020-06-07")
-    // var object = weekday;
-    // forecast15Array[0].week_day = weekday;
-
-    var i;
-    for (i = 0; i < forecast15Array.length; i++) {
-      var date = forecast15Array[i].date;
-      var dailyIconDay = forecast15Array[i].text_day;
-      var dailyIconNight = forecast15Array[i].text_night;
-      var dailyIconDay = that.getWeatherIconDay(dailyIconDay);
-      var dailyIconNight = that.getWeatherIconNight(dailyIconNight);
-      var shortDate = that.getShortDate(date);
-      forecast15Array[0].date = '今天';
-      forecast15Array[1].date = '明天';
-      forecast15Array[i].date = shortDate;
-      forecast15Array[i].code_day = dailyIconDay;
-      forecast15Array[i].code_night = dailyIconNight;
+    var currentTemperature = currentWeather.now.temperature + '℃';
+    var currentWeatherText = currentWeather.now.text
+    var currentWind = currentWeather.now.wind_direction + '风' + currentWeather.now.wind_scale + '级';
+    var currentTime = that.getCurrentTime(currentWeather.last_update)
+    if (currentTime > 6 && currentTime < 18) {
+      var currentWeatherIcon = that.getWeatherIconDay(currentWeather.now.text);
+    } else {
+      var currentWeatherIcon = that.getWeatherIconNight(currentWeather.now.text);
     }
 
     that.setData({
-      forecast15Array: forecast15Array,
-      todayTemperature: todayTemperature,
+      currentTemperature: currentTemperature,
+      currentWeatherText: currentWeatherText,
+      currentWind: currentWind,
+      currentWeatherIcon: currentWeatherIcon,
     })
   },
 
-  // 获取精简格式的日期
-  getShortDate(date) {
-    var index = date.indexOf("-")
-    var shortDate1 = date.substring(index + 1, index + 3);
-    var shortDate2 = date.substring(index + 4, );
-    var shortDate = shortDate1 + "/" + shortDate2
-    return shortDate;
+  //获取精简格式的当前时间
+  getCurrentTime(last_update) {
+    var index = last_update.indexOf("T")
+    var currentTime = last_update.substring(index + 1, index + 3);
+    // console.log(currentTime)
+    return currentTime;
   },
-
-  //Javascript new Date()和getDay()获取日期对应星期几
-  // getWeekday(date) {
-  //   var currentDate = new Date(date);
-  //   // console.log(currentDate)
-  //   var index = currentDate.getDay();
-  //   // console.log(index)
-  //   var weekdayArray = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-  //   var weekday = weekdayArray[index]
-  //   console.log(weekday)
-  //   return weekday;
-  // },
 
 })
