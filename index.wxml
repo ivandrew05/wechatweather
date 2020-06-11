@@ -10,13 +10,16 @@
 
     <view class="todayInfo">
       <view class="weatherIcon">
-        <image src='{{currentWeatherIcon}}' style="height: 300rpx; width:300rpx;"></image>
+        <image src='{{todayIconDay}}' style="height: 240rpx; width:240rpx;"></image>
+        <image src='{{todayIconNight}}' style="height: 240rpx; width:240rpx;"></image>
       </view>
       <view class="weatherinfo">
-        <view class="temperature">{{currentTemperature}}</view>
-        <view class="description">{{currentWeatherText}}</view>
-        <view class="wind">{{currentWind}}</view>
-        <view class='air' style="background-color:{{airColor}}" bindtap="pmTap">{{aqi}} {{airText}}</view>
+        <view class="temperature">{{todayTemperature}}</view>
+        <view class="description">{{todayWeather}}</view>
+        <view class="wind">{{todayWind}}</view>
+        <view class='air' style="background-color:{{todayAirColor}}" bindtap="pmTap">
+          {{todayAirAqi}} {{todayAirQuality}}
+        </view>
       </view>
     </view>
 
@@ -26,12 +29,13 @@
     <!-- wx:for列表渲染24小时逐小时天气预报 -->
     <scroll-view class="hourlyScroll" scroll-x='true' style="width:100%">
       <view class="hourlyWeather" wx:for="{{hourlyWeather}}" wx:for-item="item" wx:key="key">
-        <view class="hourlyTime">
-          {{item.time}}
-        </view>
-        <view class="hourlyIcon">
-          <image src="{{item.text}}" style='height:90rpx;width:90rpx;'>
-          </image>
+        <view class="hourlyUnit">
+          <view class="hourlyText">{{item.time}}</view>
+          <view class="hourlyIcon">
+            <image src="{{item.weatherIcon}}" style='height:90rpx;width:90rpx;'>
+            </image>
+          </view>
+          <view class="hourlyText">{{item.temperature}}</view>
         </view>
       </view>
     </scroll-view>
@@ -39,8 +43,9 @@
     <view class="subTitle">15天预报</view>
     <view class="horizontalLine"></view>
 
-    <!-- wx:for列表渲染15天天气预报 -->
     <scroll-view class="forecastScroll" scroll-x='true'>
+
+      <!-- wx:for列表渲染15天天气预报 -->
       <view class="forecast15Array" wx:for="{{forecast15Array}}" wx:for-item="item" wx:key="key">
         <view class="forecastUnit">
           <view class="weekday">{{item.weekday}}</view>
@@ -59,6 +64,18 @@
           <view class="forecastSmall">{{item.wind_scale}}</view>
         </view>
       </view>
+
+      <view class="airSmallContainer">
+        <view class='airSmallUnit'>
+        </view>
+        <!-- wx:for列表渲染空气质量 -->
+        <view class='airSmallUnit' wx:for="{{airArray}}" wx:for-item="item" wx:key="key">
+          <view class="airSmallText" style="background-color:{{item.airColor}}">
+            {{item.airText}}
+          </view>
+        </view>
+      </view>
+
     </scroll-view>
 
     <!-- wx:for列表渲染生活指数 -->
@@ -68,7 +85,7 @@
         {{item.title}}
       </view>
       <view class="livingIndexText">
-        {{item.des}}
+        {{item.text}}
       </view>
     </view>
 

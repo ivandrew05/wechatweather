@@ -37,7 +37,7 @@ page {
   display: flex;
   flex-direction: row;
   height: 360rpx;
-  padding: 0 0 20rpx 18rpx;
+  padding: 0 10rpx 20rpx 20rpx;
   justify-content: center;
   align-items: center;
 }
@@ -47,19 +47,19 @@ page {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 65%;
 }
 
 .weatherinfo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 40%;
+  width: 35%;
   font-size: 28rpx;
 }
 
 .temperature {
-  font-size: 50rpx;
+  font-size: 44rpx;
 }
 
 .description {
@@ -82,16 +82,11 @@ page {
   width: 16.7%;
 }
 
-.hourlyTime {
-  text-align: center;
-  font-size: 28rpx;
-  padding-bottom: 2rpx;
-}
-
-.hourlyIcon {
+.hourlyUnit {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 28rpx;
 }
 
 .subTitle {
@@ -119,6 +114,26 @@ page {
 
 .forecastSmall {
   font-size: 26rpx;
+}
+
+.airSmallContainer {
+  display: flex;
+  flex-direction: row;
+  font-size: 24rpx;
+  padding-top: 4rpx;
+  text-align: center;
+}
+
+.airSmallUnit {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 16.7%;
+}
+
+.airSmallText {
+  padding: 0 6rpx 0 6rpx;
+  border-radius: 4rpx;
 }
 
 .horizontalLine {
