@@ -50,7 +50,7 @@ page {
   width: 65%;
 }
 
-.weatherinfo {
+.weatherInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,16 +60,23 @@ page {
 
 .temperature {
   font-size: 44rpx;
+  padding-bottom: 6rpx;
 }
 
-.description {
+.weatherText {
   font-size: 34rpx;
+  padding-bottom: 10rpx;
+}
+
+.wind{
+  padding-bottom: 8rpx;
 }
 
 .air {
-  padding: 4rpx 16rpx 4rpx 16rpx;
+  font-size: 26rpx;
+  padding: 2rpx 8rpx 2rpx 8rpx;
   margin-top: 4rpx;
-  border-radius: 10rpx;
+  border-radius: 8rpx;
 }
 
 .hourlyScroll {
@@ -95,7 +102,14 @@ page {
   padding: 0 0 10rpx 20rpx;
 }
 
-.forecastScroll {
+.horizontalLine {
+  background: rgb(150, 150, 150);
+  width: 100%;
+  height: 2rpx;
+  margin-bottom: 6rpx;
+}
+
+.forecast15Scroll {
   white-space: nowrap;
   padding: 10rpx 0 10rpx 0;
 }
@@ -112,16 +126,19 @@ page {
   font-size: 28rpx;
 }
 
-.forecastSmall {
+.textNormal {
+  padding-bottom: 10rpx;
+}
+
+.textSmall {
   font-size: 26rpx;
+  padding-bottom: 10rpx;
 }
 
 .airSmallContainer {
   display: flex;
   flex-direction: row;
   font-size: 24rpx;
-  padding-top: 4rpx;
-  text-align: center;
 }
 
 .airSmallUnit {
@@ -129,31 +146,35 @@ page {
   flex-direction: row;
   justify-content: center;
   width: 16.7%;
-}
-
-.airSmallText {
-  padding: 0 6rpx 0 6rpx;
+  margin: 0rpx 34rpx 0rpx 34rpx;
   border-radius: 4rpx;
 }
 
-.horizontalLine {
-  background: rgb(150, 150, 150);
-  width: 100%;
-  height: 2rpx;
-}
-
-.livingIndexTitle {
+.livingSubTitle {
   font-size: 30rpx;
-  padding: 16rpx 20rpx 0 20rpx;
+  font-weight: bold;
+  padding: 16rpx 0 10rpx 20rpx;
 }
 
-.livingIndexText {
-  font-size: 26rpx;
-  padding: 12rpx 20rpx 16rpx 20rpx;
+.livingIndexContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.livingUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20%;
+  font-size: 28rpx;
+}
+
+.livingSmallText {
+  font-size: 24rpx;
 }
 
 .bottom {
-  padding-top: 50rpx;
+  padding-top: 400rpx;
 }
 
 ::-webkit-scrollbar {

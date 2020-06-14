@@ -86,30 +86,52 @@ Page({
   // 设置昨天和未来15天天气
   setForecast15Array(forecast15Array) {
     var that = this;
-    console.log(forecast15Array)
-
-    var low = forecast15Array[1].low;
-    var high = forecast15Array[1].high;
-    var todayTemperature = low + " - " + high + "℃";
+    // console.log(forecast15Array)
 
     var i;
     for (i = 0; i < forecast15Array.length; i++) {
+      //计算日期对应星期几
       var date = forecast15Array[i].date;
-      var dailyIconDay = forecast15Array[i].text_day;
-      var dailyIconNight = forecast15Array[i].text_night;
-
-      var windDirection = forecast15Array[i].wind_direction
-      if (windDirection != '无持续风向')
-        windDirection = windDirection + '风';
-
-      var windScale = forecast15Array[i].wind_scale + '级';
-      var dailyIconDay = that.getWeatherIconDay(dailyIconDay);
-      var dailyIconNight = that.getWeatherIconNight(dailyIconNight);
-      var shortDate = that.getShortDate(date);
       var weekday = that.getWeekday(date);
-      forecast15Array[0].weekday = '昨天';
       forecast15Array[1].weekday = '今天';
-      forecast15Array[2].weekday = '明天';
+      forecast15Array[i].weekday = weekday;
+
+      //计算精简格式的日期
+      var shortDate = that.getShortDate(date);
+      forecast15Array[i].shortDate = shortDate;
+
+      //计算每天的天气图标
+      var dailyTextDay = forecast15Array[i].text_day;
+      var dailyTextNight = forecast15Array[i].text_night;
+      var dailyIconDay = that.getWeatherIconDay(dailyTextDay);
+      var dailyIconNight = that.getWeatherIconNight(dailyTextNight);
+      forecast15Array[i].iconDay = dailyIconDay;
+      forecast15Array[i].iconNight = dailyIconNight;
+
+      //计算风向和等级
+      var windDirection = forecast15Array[i].wind_direction;
+      if (windDirection == '无持续风向') {
+        windDirection = '不定';
+      } else {
+        windDirection = windDirection + '风';
+      }
+      forecast15Array[i].wind_direction = windDirection;
+      var windScale = forecast15Array[i].wind_scale + '级';
+      forecast15Array[i].wind_scale = windScale;
+
+      //计算今天的天气信息
+      var todayWeekday = that.getWeekday(forecast15Array[1].date);
+      var todayDate = that.getTodayDate(forecast15Array[1].date);
+      var todayDateInfo = '今天 ' + todayWeekday + ' ' + todayDate;
+      var todayIconDay = forecast15Array[1].iconDay;
+      var todayIconNight = forecast15Array[1].iconNight;
+      var low = forecast15Array[1].low;
+      var high = forecast15Array[1].high;
+      var todayTemperature = low + " - " + high + "℃";
+      var textDay = forecast15Array[1].text_day;
+      var textNight = forecast15Array[1].text_night;
+      var todayWeather = that.getTodayWeather(textDay, textNight);
+      var todayWind = forecast15Array[1].wind_direction + forecast15Array[1].wind_scale;
 
       //处理凌晨00:00后获取的数据是未知
       if (forecast15Array[15].text_day == "未知") {
@@ -120,30 +142,16 @@ Page({
         forecast15Array[15].wind_direction = forecast15Array[14].wind_direction;
         forecast15Array[15].wind_scale = forecast15Array[14].wind_scale;
       }
-
-      forecast15Array[i].weekday = weekday;
-      forecast15Array[i].shortDate = shortDate;
-      forecast15Array[i].code_day = dailyIconDay;
-      forecast15Array[i].code_night = dailyIconNight;
-      forecast15Array[i].wind_direction = windDirection;
-      forecast15Array[i].wind_scale = windScale;
-      var todayIconDay = forecast15Array[1].code_day;
-      var todayIconNight = forecast15Array[1].code_night;
-      var todayWind = forecast15Array[1].wind_direction + forecast15Array[1].wind_scale;
-      var todayWeather = that.getTodayWeather(forecast15Array);
-      var todayWeekday = that.getWeekday(forecast15Array[1].date);
-      var todayDate = that.getTodayDate(forecast15Array[1].date);
-      var todayDateInfo = '今天 ' + todayWeekday + ' ' + todayDate;
     }
 
     that.setData({
-      forecast15Array: forecast15Array,
-      todayTemperature: todayTemperature,
+      todayDateInfo: todayDateInfo,
       todayIconDay: todayIconDay,
       todayIconNight: todayIconNight,
-      todayWind: todayWind,
+      todayTemperature: todayTemperature,
       todayWeather: todayWeather,
-      todayDateInfo: todayDateInfo,
+      todayWind: todayWind,
+      forecast15Array: forecast15Array
     })
   },
 
@@ -171,28 +179,25 @@ Page({
   //设置生活指数
   setLivingIndex(livingIndex) {
     var that = this;
-    var livingIndexArray = [{
-      title: '穿衣',
-      text: ''
-    }, {
-      title: '紫外线',
-      text: ''
-    }, {
-      title: '运动',
-      text: ''
-    }, {
-      title: '感冒',
-      text: ''
-    }, {
-      title: '洗车',
-      text: ''
-    }];
-    livingIndexArray[0].text = livingIndex.dressing.details;
-    livingIndexArray[1].text = livingIndex.uv.details;
-    livingIndexArray[2].text = livingIndex.sport.details;
-    livingIndexArray[3].text = livingIndex.flu.details;
-    livingIndexArray[4].text = livingIndex.car_washing.details;
-    console.log(livingIndexArray)
+    // console.log(livingIndex)
+    var livingIndexArray = [];
+    livingIndexArray.push(livingIndex.dressing);
+    livingIndexArray.push(livingIndex.uv);
+    livingIndexArray.push(livingIndex.sport);
+    livingIndexArray.push(livingIndex.flu);
+    livingIndexArray.push(livingIndex.car_washing);
+    livingIndexArray[0].icon = "/images/dressing.svg";
+    livingIndexArray[1].icon = "/images/uv.svg";
+    livingIndexArray[2].icon = "/images/sports.svg";
+    livingIndexArray[3].icon = "/images/flu.svg";
+    livingIndexArray[4].icon = "/images/carwash.svg";
+    livingIndexArray[0].title = "穿衣";
+    livingIndexArray[1].title = "紫外线";
+    livingIndexArray[2].title = "运动";
+    livingIndexArray[3].title = "感冒";
+    livingIndexArray[4].title = "洗车";
+
+    // console.log(livingIndexArray)
 
     that.setData({
       livingIndexArray: livingIndexArray,
@@ -201,7 +206,6 @@ Page({
 
   // 获取24小时天气预报
   getHourlyWeather(jingWeiDu) {
-    // var jingWeiDu = jingWeiDu;
     var that = this;
 
     wx.request({
@@ -224,25 +228,26 @@ Page({
 
   //设置24小时天气预报
   setHourlyWeather(hourlyWeather) {
-    console.log(hourlyWeather)
+    // console.log(hourlyWeather)
     var that = this;
 
-    // 用for loop修改array里面object的time和text
     var i;
     for (i = 0; i < hourlyWeather.length; i++) {
+      //计算精简格式的时间
       var hourlyWeatherTime = hourlyWeather[i].time;
       var shortHourlyTime = that.getShortHourlyTime(hourlyWeatherTime);
       hourlyWeather[0].time = "现在";
       hourlyWeather[i].time = shortHourlyTime;
 
+      //计算天气图标
       var hourlyWeatherText = hourlyWeather[i].text;
+      var hourlyWeatherIcon;
       if (shortHourlyTime > 6 && shortHourlyTime < 18) {
-        var hourlyWeatherIcon = that.getWeatherIconDay(hourlyWeatherText);
-        hourlyWeather[i].weatherIcon = hourlyWeatherIcon;
+        hourlyWeatherIcon = that.getWeatherIconDay(hourlyWeatherText);
       } else {
-        var hourlyWeatherIcon = that.getWeatherIconNight(hourlyWeatherText);
-        hourlyWeather[i].weatherIcon = hourlyWeatherIcon;
+        hourlyWeatherIcon = that.getWeatherIconNight(hourlyWeatherText);
       }
+      hourlyWeather[i].weatherIcon = hourlyWeatherIcon;
     }
 
     that.setData({
@@ -265,23 +270,44 @@ Page({
       success(res) {
         // console.log(res.data)
         var airArray = res.data.results[0].daily;
+        // console.log(airArray)
+
+        var saveOnceAir = wx.getStorageSync('key');
+        if (saveOnceAir == false) {
+          saveOnceAir = airArray[0]
+          wx.setStorageSync('key', saveOnceAir);
+          console.log('没有数据，第一次保存数据')
+        } else {
+          if (saveOnceAir.date == airArray[0].date) {
+            console.log('有数据，但还是同一天，不更新数据')
+
+          } else {
+            wx.setStorageSync('key', saveOnceAir);
+            console.log('有数据，但是新的一天，用昨天数据更新数据')
+          }
+        }
+
+        //把昨天空气object放到array的开头
+        airArray.unshift(saveOnceAir);
         console.log(airArray)
+
         var i;
         for (i = 0; i < airArray.length; i++) {
           var aqi = airArray[i].aqi;
           var air = that.getAir(aqi);
           airArray[i].airColor = air[0];
           airArray[i].airText = air[1];
-          var todayAirColor = airArray[0].airColor;
-          var todayAirAqi = airArray[0].aqi;
-          var todayAirQuality = airArray[0].quality;
         }
 
+        var todayAirColor = airArray[1].airColor;
+        var todayAirAqi = airArray[1].aqi;
+        var todayAirQuality = airArray[1].airText;
+
         that.setData({
-          airArray,
           todayAirColor,
           todayAirAqi,
-          todayAirQuality
+          todayAirQuality,
+          airArray
         })
       }
     })
@@ -311,6 +337,7 @@ Page({
       airColor = "#7e0023";
       airText = "严重";
     }
+
     var air = [airColor, airText];
     return air
   },
@@ -325,11 +352,12 @@ Page({
   },
 
   //获取今天天气文字描述
-  getTodayWeather(forecast15Array) {
-    if (forecast15Array[1].text_day == forecast15Array[1].text_night) {
-      var todayWeather = forecast15Array[1].text_day
+  getTodayWeather(textDay, textNight) {
+    var todayWeather;
+    if (textDay == textNight) {
+      todayWeather = textDay
     } else {
-      todayWeather = forecast15Array[1].text_day + '转' + forecast15Array[1].text_night
+      todayWeather = textDay + '转' + textNight
     }
     return todayWeather
   },
@@ -532,8 +560,7 @@ Page({
   },
 
   //获取PM25详细信息
-  pmTap() {
-    console.log("成功")
+  airTap() {
     wx.showModal({
       title: '代码中',
       content: '敬请期待',

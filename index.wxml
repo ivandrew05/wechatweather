@@ -13,11 +13,11 @@
         <image src='{{todayIconDay}}' style="height: 240rpx; width:240rpx;"></image>
         <image src='{{todayIconNight}}' style="height: 240rpx; width:240rpx;"></image>
       </view>
-      <view class="weatherinfo">
+      <view class="weatherInfo">
         <view class="temperature">{{todayTemperature}}</view>
-        <view class="description">{{todayWeather}}</view>
+        <view class="weatherText">{{todayWeather}}</view>
         <view class="wind">{{todayWind}}</view>
-        <view class='air' style="background-color:{{todayAirColor}}" bindtap="pmTap">
+        <view class='air' style="background-color:{{todayAirColor}}" bindtap="airTap">
           {{todayAirAqi}} {{todayAirQuality}}
         </view>
       </view>
@@ -27,7 +27,7 @@
     <view class="horizontalLine"></view>
 
     <!-- wx:for列表渲染24小时逐小时天气预报 -->
-    <scroll-view class="hourlyScroll" scroll-x='true' style="width:100%">
+    <scroll-view class="hourlyScroll" scroll-x='true'>
       <view class="hourlyWeather" wx:for="{{hourlyWeather}}" wx:for-item="item" wx:key="key">
         <view class="hourlyUnit">
           <view class="hourlyText">{{item.time}}</view>
@@ -43,49 +43,46 @@
     <view class="subTitle">15天预报</view>
     <view class="horizontalLine"></view>
 
-    <scroll-view class="forecastScroll" scroll-x='true'>
+    <scroll-view class="forecast15Scroll" scroll-x='true'>
 
       <!-- wx:for列表渲染15天天气预报 -->
       <view class="forecast15Array" wx:for="{{forecast15Array}}" wx:for-item="item" wx:key="key">
         <view class="forecastUnit">
-          <view class="weekday">{{item.weekday}}</view>
-          <view class="forecastSmall">{{item.shortDate}}</view>
-          <view class="descriptionX">{{item.text_day}}</view>
-          <view class="weatherIconX">
-            <image src='{{item.code_day}}' style='height:90rpx;width:90rpx;'></image>
+          <view class="textNormal">{{item.weekday}}</view>
+          <view class="textSmall">{{item.shortDate}}</view>
+          <view class="textNormal">{{item.text_day}}</view>
+          <view>
+            <image src='{{item.iconDay}}' style='height:90rpx;width:90rpx;'></image>
           </view>
-          <view class="temperatureX">{{item.high}}</view>
-          <view class="temperatureX">{{item.low}}</view>
-          <view class="weatherIconX">
-            <image src='{{item.code_night}}' style='height:90rpx;width:90rpx;'></image>
+          <view class="textNormal">{{item.high}}</view>
+          <view class="textNormal">{{item.low}}</view>
+          <view>
+            <image src='{{item.iconNight}}' style='height:90rpx;width:90rpx;'></image>
           </view>
-          <view class="descriptionX">{{item.text_night}}</view>
-          <view class="forecastSmall">{{item.wind_direction}}</view>
-          <view class="forecastSmall">{{item.wind_scale}}</view>
+          <view class="textNormal">{{item.text_night}}</view>
+          <view class="textSmall">{{item.wind_direction}}</view>
+          <view class="textSmall">{{item.wind_scale}}</view>
         </view>
       </view>
 
+      <!-- wx:for列表渲染空气质量 -->
       <view class="airSmallContainer">
-        <view class='airSmallUnit'>
-        </view>
-        <!-- wx:for列表渲染空气质量 -->
-        <view class='airSmallUnit' wx:for="{{airArray}}" wx:for-item="item" wx:key="key">
-          <view class="airSmallText" style="background-color:{{item.airColor}}">
-            {{item.airText}}
-          </view>
+        <view class='airSmallUnit' wx:for="{{airArray}}" wx:for-item="item" wx:key="key" style="background-color:{{item.airColor}}">
+          {{item.airText}}
         </view>
       </view>
 
     </scroll-view>
 
+    <view class="livingSubTitle">生活指数</view>
+    <view class="horizontalLine"></view>
+
     <!-- wx:for列表渲染生活指数 -->
-    <view wx:for="{{livingIndexArray}}" wx:for-item="item" wx:key="key">
-      <view class="horizontalLine"></view>
-      <view class="livingIndexTitle">
-        {{item.title}}
-      </view>
-      <view class="livingIndexText">
-        {{item.text}}
+    <view class="livingIndexContainer">
+      <view class="livingUnit" wx:for="{{livingIndexArray}}" wx:for-item="item" wx:key="key">
+        <image src="{{item.icon}}" style="height:90rpx; width=90rpx;"></image>
+        <text>{{item.brief}}</text>
+        <text class="livingSmallText">{{item.title}}</text>
       </view>
     </view>
 
