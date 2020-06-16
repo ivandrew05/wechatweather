@@ -220,6 +220,7 @@ Page({
       success(res) {
         // console.log(res.data)
         var hourlyWeather = res.data.results[0].hourly;
+        console.log(res.data.results[0])
         that.setHourlyWeather(hourlyWeather);
         that.getAirQuality(jingWeiDu);
       }
@@ -272,23 +273,51 @@ Page({
         var airArray = res.data.results[0].daily;
         // console.log(airArray)
 
-        var saveOnceAir = wx.getStorageSync('key');
-        if (saveOnceAir == false) {
-          saveOnceAir = airArray[0]
-          wx.setStorageSync('key', saveOnceAir);
-          console.log('没有数据，第一次保存数据')
-        } else {
-          if (saveOnceAir.date == airArray[0].date) {
-            console.log('有数据，但还是同一天，不更新数据')
+        // //每次打开会从api获取今天和未来四天的空气质量，如下：
+        // airArray = [{
+        //   date: '2020-06-16',
+        //   aqi: "50"
+        // }, {
+        //   date: '2020-06-17',
+        //   aqi: "150"
+        // }, {
+        //   date: '2020-06-18',
+        //   aqi: "200"
+        // }, {
+        //   date: '2020-06-19',
+        //   aqi: "250"
+        // }, {
+        //   date: '2020-06-20',
+        //   aqi: "300"
+        // }]
 
-          } else {
-            wx.setStorageSync('key', saveOnceAir);
-            console.log('有数据，但是新的一天，用昨天数据更新数据')
+        var airA;
+        var airB = wx.getStorageSync('airB');
+        // console.log(airB)
+
+        // 如果用户没有昨天的缓存，用今天数据替代，同时缓存起来
+        if (airB == false) {
+          airA = airArray[0]
+          airB = wx.setStorageSync('airB', airArray[0])
+          console.log('没有缓存，第一次保存')
+        }
+        //如果用户有缓存
+        else {
+          //如果日期不一样
+          if (airB.date != airArray[0].date) {
+            airA = airB;
+            airB = wx.setStorageSync('airB', airArray[0])
+            console.log('有缓存，新的一天，刷新数据')
+          }
+          // 如果日期一样
+          else {
+            airA = wx.getStorageSync('airB')
+            airB = wx.setStorageSync('airB', airArray[0])
+            console.log('有缓存，同一天，不刷新数据')
           }
         }
 
-        //把昨天空气object放到array的开头
-        airArray.unshift(saveOnceAir);
+        airArray.unshift(airA)
         console.log(airArray)
 
         var i;
