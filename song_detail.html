@@ -1,0 +1,65 @@
+{% extends 'mysite/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="w3-container">
+    <iframe class="video" src="{{song.video_url}}" scrolling="no" border="0" frameborder="no" framespacing="0"
+        allowfullscreen="true"> </iframe>
+</div>
+
+<div class="w3-container">
+    <div class="song-detail-container">
+        <div class="song-detail-left">
+            <div class="w3-large">{{song.song_name}}</div>
+            <div class="w3-small">原作者：{{song.composer}}</div>
+            <div class="w3-small">表演者：{{song.performancer}}</div>
+            <div class="w3-small">播放数：{{song.view_count}}</div>
+        </div>
+        <div class="song-detail-right">
+            <a class="w3-button w3-light-grey w3-round w3-right" href="{% url 'sheet_music' pk=song.pk %}"
+                target="_blank">钢琴谱</a>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<div class="w3-container">
+    <div class="w3-large">评论</div>
+    <div class="comment-container">
+        <form method="POST" id="create-comment" data-url="{% url 'create_comment' pk=song.pk %}">
+            {% csrf_token %}
+            <!-- {{ comment_form.as_p }} -->
+            {% render_field comment_form.content class="w3-input comment-form" %}
+
+            <button type="submit" class="w3-button w3-blue w3-round w3-small w3-right w3-margin-top">提交</button>
+        </form>
+    </div>
+</div>
+
+<div class="w3-container" id="user-comment">
+    {% for comment in comments %}
+    <hr>
+    <div class="w3-row">
+        <div class="w3-col" style="width:60px">
+            <img class="w3-circle" src="{{ comment.author.profile.image.url }}" width="50px" height="50px">
+        </div>
+        <div class="w3-rest">
+            <div class="comment-author">{{ comment.author }}</div>
+            <div>{{ comment.content|linebreaks }}</div>
+            <div class="w3-small w3-text-grey">{{ comment.created_date }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="w3-container">
+    <hr>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'mysite/main.js' %}"></script>
+{% endblock javascript %}

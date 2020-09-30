@@ -1,0 +1,59 @@
+{% load static %}
+
+<!doctype html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>钢琴谱海湾</title>
+
+    <link rel="stylesheet" href="{% static 'mysite/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'mysite/style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'mysite/images/favicon.svg' %}" />
+
+</head>
+
+<body>
+
+    <div class="navigation-container">
+        <div class="navigation-left">
+            <a href="{% url 'index' %}">
+                <img class="logo" src="{% static 'mysite/images/logo.svg' %}">
+            </a>
+        </div>
+        <div class="navigation-middle">
+            <a class="navigation-button" href="{% url 'index' %}">首页</a>
+            <a class="navigation-button" href="{% url 'album' %}">合集</a>
+            <a class="navigation-button" href="{% url 'practice' %}">练习</a>
+            <a class="navigation-button" href="{% url 'contact' %}">留言</a>
+        </div>
+        <div class="navigation-right">
+            {% if user.is_authenticated %}
+            <a class="navigation-button" href="{% url 'profile' %}">{{ user.username }}</a>
+            <a class="navigation-button loginout-button" href="{% url 'logout' %}">退出</a>
+            {% else %}
+            <a class="navigation-button" href="{% url 'register' %}">注册</a>
+            <a class="navigation-button loginout-button" href="{% url 'login' %}">登录</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="w3-container">
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif%}
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="{% static 'mysite/jquery.min.js' %}"></script>
+    {% block javascript %}
+    {% endblock javascript %}
+
+</body>
+
+</html>

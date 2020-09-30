@@ -1,0 +1,16 @@
+{% extends 'mysite/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="image-container">
+    {% for song in song_list %}
+    <a class="image-unit" href="{% url 'song_detail' pk=song.pk %}">
+        <img class="song-image" src="{% static song.image_url %}">
+        <p class="song-name">{{ song.song_name }}</p>
+        <p class="composer">{{ song.composer }}</p>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}
